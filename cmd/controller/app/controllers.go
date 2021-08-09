@@ -21,6 +21,7 @@ import (
 	"kubesphere.io/devops/cmd/controller/app/options"
 	"kubesphere.io/devops/controllers/devopscredential"
 	"kubesphere.io/devops/controllers/devopsproject"
+	"kubesphere.io/devops/controllers/jenkins/pipelinerun"
 	"kubesphere.io/devops/controllers/jenkinsconfig"
 	"kubesphere.io/devops/controllers/pipeline"
 	"kubesphere.io/devops/controllers/s2ibinary"
@@ -86,6 +87,14 @@ func addControllers(mgr manager.Manager, client k8s.Client, informerFactory info
 			ConfigOperator:  devopsClient,
 			ReloadCasCDelay: s.JenkinsOptions.ReloadCasCDelay,
 		}, s.JenkinsOptions)
+
+		// add pipelinerun controller
+		if err := (&pipelinerun.PipelineRunReconciler{
+			Client: mgr.GetClient(),
+			Scheme: mgr.GetScheme(),
+		}).SetupWithManager(mgr); err != nil {
+			klog.Errorf("unable to create jenkins-pipeline-controller, err: %v", err)
+		}
 	}
 
 	controllers := map[string]manager.Runnable{
