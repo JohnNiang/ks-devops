@@ -28,6 +28,41 @@ type PipelineRunSpec struct {
 	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
 	// Important: Run "make" to regenerate code after modifying this file
 
+	PipelineRef *PipelineRef `json:"pipelineRef" description:"pipeline reference"`
+
+	Parameters []Parameter `json:"parameters,omitempty" description:"parameters"`
+}
+
+// PipelineRunStatus defines the observed state of PipelineRun
+type PipelineRunStatus struct {
+	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
+	// Important: Run "make" to regenerate code after modifying this file
+
+	PipelineRunStatusField `json:",inline"`
+}
+
+//+kubebuilder:object:root=true
+//+kubebuilder:subresource:status
+
+// PipelineRun is the Schema for the pipelineruns API
+type PipelineRun struct {
+	metav1.TypeMeta   `jsPipelineRunStatusFieldson:",inline"`
+	metav1.ObjectMeta `json:"metadata,omitempty"`
+
+	Spec   PipelineRunSpec   `json:"spec,omitempty"`
+	Status PipelineRunStatus `json:"status,omitempty"`
+}
+
+//+kubebuilder:object:root=true
+
+// PipelineRunList contains a list of PipelineRun
+type PipelineRunList struct {
+	metav1.TypeMeta `json:",inline"`
+	metav1.ListMeta `json:"metadata,omitempty"`
+	Items           []PipelineRun `json:"items"`
+}
+
+type PipelineRunStatusField struct {
 	Organization              string              `json:"organization" description:"name of the organization"`
 	Id                        string              `json:"id" description:"pipeline id - unique within a pipeline"`
 	Pipeline                  string              `json:"pipeline" description:"pipeline name - unique within a pipeline"`
@@ -49,33 +84,6 @@ type PipelineRunSpec struct {
 	Replayable                bool                `json:"replayable" description:"if the run will allow a replay"`
 }
 
-// PipelineRunStatus defines the observed state of PipelineRun
-type PipelineRunStatus struct {
-	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
-	// Important: Run "make" to regenerate code after modifying this file
-}
-
-//+kubebuilder:object:root=true
-//+kubebuilder:subresource:status
-
-// PipelineRun is the Schema for the pipelineruns API
-type PipelineRun struct {
-	metav1.TypeMeta   `json:",inline"`
-	metav1.ObjectMeta `json:"metadata,omitempty"`
-
-	Spec   PipelineRunSpec   `json:"spec,omitempty"`
-	Status PipelineRunStatus `json:"status,omitempty"`
-}
-
-//+kubebuilder:object:root=true
-
-// PipelineRunList contains a list of PipelineRun
-type PipelineRunList struct {
-	metav1.TypeMeta `json:",inline"`
-	metav1.ListMeta `json:"metadata,omitempty"`
-	Items           []PipelineRun `json:"items"`
-}
-
 type ChangeEntry struct {
 	Author        *Author  `json:"author"`
 	CommitId      string   `json:"commit,omitempty" description:"a human readable display name of the commit number, revision number, and such thing that identifies this entry. null if such a concept doesn't make sense for the implementation. For example, in CVS there's no single identifier for commits. Each file gets a different revision number."`
@@ -92,6 +100,22 @@ type Author struct {
 	FullName string `json:"fullName" description:"the name of the author e.g. John Smith"`
 	Email    string `json:"email,omitempty" description:"email address of this author"`
 	Avatar   string `json:"avatar" description:"avatar of this author"`
+}
+
+type Parameter struct {
+	Name  string `json:"name" description:"parameter name"`
+	Value string `json:"value" description:"parameter value"`
+}
+
+// PipelineRef contains enough information to let you identify the referred resource.
+type PipelineRef struct {
+	// Kind of the referent; More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#types-kinds"
+	Kind string
+	// Name of the referent; More info: http://kubernetes.io/docs/user-guide/identifiers#names
+	Name string
+	// API version of the referent
+	// +optional
+	APIVersion string
 }
 
 type RunState string
