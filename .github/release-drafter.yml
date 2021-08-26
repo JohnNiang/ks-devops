@@ -1,7 +1,7 @@
 # Configuration for Release Drafter: https://github.com/toolmantim/release-drafter
 name-template: 'v$NEXT_PATCH_VERSION 🌈'
 tag-template: 'v$NEXT_PATCH_VERSION'
-version-template: $MAJOR.$MINOR.$PATCH
+version-template: '$MAJOR.$MINOR.$PATCH'
 # Emoji reference: https://gitmoji.carloscuesta.me/
 categories:
   - title: '🚀 Features'
