@@ -275,7 +275,7 @@ func (d devopsOperator) ListPipelineObj(projectName string, query *query.Query) 
 		return api.ListResult{}, err
 	}
 
-	var result = make([]runtime.Object, len(pipelines.Items))
+	var result = make([]runtime.Object, 0, len(pipelines.Items))
 	for i, _ := range pipelines.Items {
 		result = append(result, &pipelines.Items[i])
 	}
