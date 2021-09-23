@@ -2,8 +2,10 @@ package pipelinerun
 
 import (
 	"context"
-	"github.com/emicklei/go-restful"
 	"io"
+	"strconv"
+
+	"github.com/emicklei/go-restful"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/klog"
 	"kubesphere.io/devops/pkg/api"
@@ -13,7 +15,6 @@ import (
 	"kubesphere.io/devops/pkg/client/devops"
 	resourcesV1alpha3 "kubesphere.io/devops/pkg/models/resources/v1alpha3"
 	"sigs.k8s.io/controller-runtime/pkg/client"
-	"strconv"
 )
 
 // apiHandlerOption holds some useful tools for API handler.

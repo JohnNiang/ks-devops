@@ -1,8 +1,9 @@
 package pipelinerun
 
 import (
-	"kubesphere.io/devops/pkg/api/devops/pipelinerun/v1alpha3"
 	"net/http"
+
+	"kubesphere.io/devops/pkg/api/devops/pipelinerun/v1alpha3"
 
 	"github.com/emicklei/go-restful"
 	"kubesphere.io/devops/pkg/api"
@@ -27,6 +28,7 @@ func RegisterRoutes(ws *restful.WebService, c client.Client) {
 		Param(ws.PathParameter("namespace", "Namespace of the pipeline")).
 		Param(ws.PathParameter("pipeline", "Name of the pipeline")).
 		Param(ws.QueryParameter("branch", "The name of SCM reference")).
+		// Deprecated: Remove this backward compatibility after releasing v3.2.0
 		Param(ws.QueryParameter("backward", "Backward compatibility for v1alpha2 API "+
 			"`/devops/{devops}/pipelines/{pipeline}/runs`. By default, the backward is true. If you want to list "+
 			"full data of PipelineRuns, just set the parameters to false.").
