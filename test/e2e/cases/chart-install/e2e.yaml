@@ -5,7 +5,6 @@ setup:
   steps:
     - name: Install ks-devops via helm chart
       command: |
-        export HTTPS_PROXY=http://x1c.mshome.net:1080
         helm repo add ks-devops https://kubesphere-sigs.github.io/ks-devops-helm-chart/
         helm repo update
         helm install ks-devops ks-devops/ks-devops -n kubesphere-devops-system --create-namespace \
