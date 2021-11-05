@@ -20,3 +20,9 @@ jobs:
         uses: apache/skywalking-infra-e2e@main
         with:
           e2e-file: $GITHUB_WORKSPACE/test/e2e/cases/chart-install/e2e.yaml
+      - name: Upload E2E Log
+        uses: actions/upload-artifact@v2
+        if: ${{ failure() }} # Only upload the artifact when E2E testing failure
+        with:
+          name: e2e-log
+          path: "${{ env.SW_INFRA_E2E_LOG_DIR }}" # The SkyWalking Infra E2E action sets SW_INFRA_E2E_LOG_DIR automatically.
