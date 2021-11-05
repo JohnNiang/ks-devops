@@ -17,10 +17,7 @@ runs:
       run: |
         # wget -c https://dlcdn.apache.org/skywalking/infra-e2e/1.0.0/skywalking-e2e-1.0.0-bin.tgz
         # tar zxvf skywalking-e2e-1.0.0-bin.tgz
-        # ls -lah
-        go env -w GOPROXY=https://goproxy.cn,direct
-        go install github.com/apache/skywalking-infra-e2e/cmd@main
-        mv ~/go/bin/cmd /usr/loca/bin/e2e
+        # install skywalking-e2e-1.0.0-bin/bin/linux/e2e /usr/local/bin
     - name: E2E Dir Generator
       id: 'e2e-dir-generator'
       shell: bash
