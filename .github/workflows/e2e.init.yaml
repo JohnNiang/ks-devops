@@ -1,0 +1,22 @@
+name: E2E - Chart Install
+
+on:
+  pull_request:
+    paths:
+      - "**"
+      - "!**.md"
+  push:
+    branches:
+      - feat/e2e
+
+jobs:
+  Install:
+    name: Chart Install
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v2
+      - name: Run E2E Test
+        uses: apache/skywalking-infra-e2e@main
+        with:
+          e2e-file: $GITHUB_WORKSPACE/test/e2e/cases/chart-install/e2e.yaml
