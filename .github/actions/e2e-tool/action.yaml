@@ -1,0 +1,65 @@
+name: SkyWalking Infra E2E
+description: End-to-End Tesing framework that help to set up, verify E2E tests.
+author: John Niang
+inputs:
+  e2e-file:
+    description: File path of e2e file
+    required: true
+  log-dir:
+    description: The container logs directory
+    required: false
+
+runs:
+  using: "composite"
+  steps:
+    - name: Install e2e
+      shell: bash
+      run: |
+        # wget -c https://dlcdn.apache.org/skywalking/infra-e2e/1.0.0/skywalking-e2e-1.0.0-bin.tgz
+        # tar zxvf skywalking-e2e-1.0.0-bin.tgz
+        # ls -lah
+        go env -w GOPROXY=https://goproxy.cn,direct
+        go install github.com/apache/skywalking-infra-e2e/cmd@main
+        mv ~/go/bin/cmd /usr/loca/bin/e2e
+    - name: E2E Dir Generator
+      id: 'e2e-dir-generator'
+      shell: bash
+      run: |
+        WORK_DIR="${{ runner.temp }}/skywalking-infra-e2e"
+        echo "::set-output name=work::$WORK_DIR"
+        LOG_DIR=""
+        LOG_JOB_DIR=""
+        if [[ "${{ inputs.log-dir }}" == "" ]]
+        then
+          matrix='${{ toJSON(matrix) }}'
+          if [[ "$matrix" == "null" ]]
+          then
+            LOG_DIR="$WORK_DIR/logs"
+            LOG_JOB_DIR="$LOG_DIR/${{ github.job }}"
+          else
+            combine_matrix=$(echo $matrix|jq -r 'to_entries|map(.value)|tostring')
+            # remove json syntax
+            combine_matrix=`echo $combine_matrix|sed -e 's/\[\|\]\|\"//g'`
+            combine_matrix=`echo $combine_matrix|sed -e 's/[\{|\}]//g'`
+            # replace to path
+            combine_matrix=`echo $combine_matrix|sed -e 's/[^A-Za-z0-9_-]/_/g'`
+            LOG_DIR="$WORK_DIR/logs"
+            LOG_JOB_DIR="$LOG_DIR/${{ github.job }}_$combine_matrix"
+          fi
+        elif [[ "${{ inputs.log-dir }}" == /* ]]
+        then
+          LOG_DIR="${{ inputs.log-dir }}"
+          LOG_JOB_DIR="${{ inputs.log-dir }}"
+        else
+          LOG_DIR="$WORK_DIR/${{ inputs.log-dir }}"
+          LOG_JOB_DIR="$WORK_DIR/${{ inputs.log-dir }}"
+        fi
+        echo "::set-output name=log::$LOG_DIR"
+        echo "::set-output name=log-case::$LOG_JOB_DIR"
+        echo "SW_INFRA_E2E_LOG_DIR=$LOG_DIR" >> $GITHUB_ENV
+    - shell: bash
+      run: |
+        e2e run \
+          -c "${{ inputs.e2e-file }}" \
+          -w "${{ steps.e2e-dir-generator.outputs.work }}" \
+          -l "${{ steps.e2e-dir-generator.outputs.log-case }}"
