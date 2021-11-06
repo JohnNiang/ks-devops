@@ -7,7 +7,7 @@ setup:
       command: |
         helm repo add ks-devops https://kubesphere-sigs.github.io/ks-devops-helm-chart/
         helm repo update
-        helm install ks-devops ks-devops/ks-devops -n kubesphere-devops-system --create-namespace \
+        helm install devops ks-devops/ks-devops -n kubesphere-devops-system --create-namespace \
                  --set image.pullPolicy=Always --set jenkins.ksAuth.enabled=true
       wait:
         - namespace: kubesphere-devops-system
