@@ -29,7 +29,7 @@ trigger:
   action: http
   interval: 3s
   times: 5
-  url: http://${deployment/devops-apiserver_host}:${deployment/devops-apiserver_9090}/
+  url: http://${deployment_devops_apiserver_host}:${deployment_devops_apiserver_9090}/
   method: GET
 
 verify:
