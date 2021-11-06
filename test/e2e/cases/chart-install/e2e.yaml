@@ -11,8 +11,14 @@ setup:
                  --set image.pullPolicy=Always --set jenkins.ksAuth.enabled=true
       wait:
         - namespace: kubesphere-devops-system
-          resource: pod
+          resource: deployment
+          for: condition=Available
+        - namespace: kubesphere-devops-system
+          resource: pod/s2ioperator-0
           for: condition=Ready
+        - namespace: kubesphere-devops-system
+          resource: job
+          for: condition=Complete
   kind:
     expose-ports:
       - namespace: kubesphere-devops-system
