@@ -31,15 +31,3 @@ setup:
       - namespace: kubesphere-devops-system
         resource: deployment/devops-apiserver
         port: 9090
-
-trigger:
-  action: http
-  interval: 3s
-  times: 5
-  url: http://${deployment_devops_apiserver_host}:${deployment_devops_apiserver_9090}/
-  method: GET
-
-verify:
-  retry:
-    count: 0
-    interval: 10s
