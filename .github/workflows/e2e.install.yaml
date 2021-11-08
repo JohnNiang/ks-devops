@@ -16,10 +16,18 @@ jobs:
     timeout-minutes: 60
     steps:
       - uses: actions/checkout@v2
+
+      - name: Build Controller manager
+        uses: ./.github/actions/build
+        with:
+          component: devops-controller
+          dockerfile: config/dockerfiles/controller-manager/Dockerfile
+
       - name: Run E2E Test
         uses: johnniang/skywalking-infra-e2e@main
         with:
           e2e-file: $GITHUB_WORKSPACE/test/e2e/cases/chart-install/e2e.yaml
+
       - name: Upload E2E Log
         uses: actions/upload-artifact@v2
         if: ${{ failure() }} # Only upload the artifact when E2E testing failure

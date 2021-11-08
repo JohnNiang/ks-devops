@@ -1,0 +1,71 @@
+name: "DevOps controller build"
+author: "JohnNiang"
+description: "DevOps controller build"
+
+inputs:
+  component:
+    description: "Component name of ks-devops"
+    required: true
+  push:
+    description: "Determine whethere push the image to registry"
+    default: "false"
+    required: false
+  dockerfile:
+    description: "Relative path of Dockerfile"
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    - name: Docker meta for kubesphere
+      id: meta
+      if: github.repository_owner == 'kubesphere'
+      uses: docker/metadata-action@v3
+      with:
+        images: |
+          kubespheredev/${{ inputs.component }}
+          ghcr.io/${{ github.repository_owner }}/${{ inputs.component }}
+        tags: |
+          type=schedule
+          type=ref,event=branch
+          type=ref,event=pr
+          type=semver,pattern=v{{version}}
+          type=sha
+    - name: Docker meta for Contributors
+      id: meta
+      if: github.repository_owner != 'kubesphere'
+      uses: docker/metadata-action@v3
+      with:
+        images: |
+          ghcr.io/${{ github.repository_owner }}/devops-controller
+        tags: |
+          type=schedule
+          type=ref,event=branch
+          type=ref,event=pr
+          type=semver,pattern=v{{version}}
+          type=sha
+    - name: Set up QEMU
+      uses: docker/setup-qemu-action@v1
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v1
+    - name: Login to DockerHub
+      if: github.event_name != 'pull_request' && inputs.push 
+      uses: docker/login-action@v1
+      with:
+        username: ${{ secrets.DOCKER_HUB_USER }}
+        password: ${{ secrets.DOCKER_HUB_SECRETS }}
+    - name: Login to GHCR
+      if: github.event_name != 'pull_request' && inputs.push 
+      uses: docker/login-action@v1
+      with:
+        registry: ghcr.io
+        username: ${{ github.repository_owner }}
+        password: ${{ secrets.GHCR_TOKEN }}
+    - name: Build and push Docker images
+      uses: docker/build-push-action@v2.4.0
+      with:
+        file: ${{ inputs.dockerfile }}
+        tags: ${{ steps.meta.outputs.tags }}
+        push: ${{ github.event_name != 'pull_request' && inputs.push }}
+        labels: ${{ steps.meta.outputs.labels }}
+        platforms: linux/amd64,linux/arm64
