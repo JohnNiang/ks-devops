@@ -17,7 +17,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Run E2E Test
-        uses: apache/skywalking-infra-e2e@main
+        uses: johnniang/skywalking-infra-e2e@main
         with:
           e2e-file: $GITHUB_WORKSPACE/test/e2e/cases/chart-install/e2e.yaml
       - name: Upload E2E Log

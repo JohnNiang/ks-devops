@@ -9,6 +9,7 @@ setup:
         helm repo update
         helm install devops ks-devops/ks-devops -n kubesphere-devops-system --create-namespace \
                  --set image.pullPolicy=Always --set jenkins.ksAuth.enabled=true
+      retryWaitAfter: 1m
       wait:
         - namespace: kubesphere-devops-system
           resource: deployment
@@ -16,9 +17,6 @@ setup:
         - namespace: kubesphere-devops-system
           resource: pod/s2ioperator-0
           for: condition=Ready
-        # - namespace: kubesphere-devops-system
-        #   resource: job
-        #   for: condition=Complete
   kind:
     expose-ports:
       - namespace: kubesphere-devops-system
