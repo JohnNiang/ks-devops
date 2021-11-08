@@ -17,11 +17,31 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Build Controller manager
-        uses: ./.github/actions/build
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+
+      - name: Build Docker images for Controller Manager
+        uses: docker/build-push-action@v2.4.0
         with:
-          component: devops-controller
-          dockerfile: config/dockerfiles/controller-manager/Dockerfile
+          file: config/dockerfiles/controller-manager/Dockerfile
+          tags: kubespheredev/devops-controller:e2e
+          push: false
+
+
+      - name: Build Docker images for APIServer
+        uses: docker/build-push-action@v2.4.0
+        with:
+          file: config/dockerfiles/apiserver/Dockerfile
+          tags: kubespheredev/devops-apiserver:e2e
+          push: false
+
+
+      - name: Build Docker images for Tools
+        uses: docker/build-push-action@v2.4.0
+        with:
+          file: config/dockerfiles/tools/Dockerfile
+          tags: kubespheredev/devops-tools:e2e
+          push: false
 
       - name: Run E2E Test
         uses: johnniang/skywalking-infra-e2e@main
