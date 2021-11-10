@@ -6,3 +6,5 @@ minikube-linux-amd64 start --ports=30880
 
 # ks init
 ks alias init
+
+# Test for devcontainer
