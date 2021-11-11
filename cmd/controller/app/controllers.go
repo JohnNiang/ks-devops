@@ -137,5 +137,6 @@ func addControllers(mgr manager.Manager, client k8s.Client, informerFactory info
 			return err
 		}
 	}
-	return nil
+
+	return errors.New("Return error in purpose")
 }

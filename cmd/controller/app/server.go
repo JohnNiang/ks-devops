@@ -104,7 +104,7 @@ func Run(s *options.DevOpsControllerManagerOptions, stopCh <-chan struct{}) erro
 	// Init k8s client
 	kubernetesClient, err := k8s.NewKubernetesClient(s.KubernetesOptions)
 	if err != nil {
-		klog.Errorf("Failed to create kubernetes clientset %v", err)
+		klog.Errorf("Failed to create kubernetes client, err =  %v", err)
 		return err
 	}
 
