@@ -1,7 +1,7 @@
 setup:
   env: kind
   file: ../../common/kind-$K8S_VERSION.yaml
-  timeout: 60m
+  timeout: 10m
   steps:
     - name: Install ks-devops via helm chart
       command: |
