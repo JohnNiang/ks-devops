@@ -69,7 +69,7 @@ func (h *apiHandler) listPipelineRuns(request *restful.Request, response *restfu
 		return
 	}
 
-	var listHandler resourcesV1alpha3.ListHandler
+	var listHandler resourcesV1alpha3.ListHandler = pipelineRunListHandler{}
 	if backward {
 		listHandler = backwardListHandler{}
 	}
