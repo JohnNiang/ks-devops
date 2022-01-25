@@ -17,6 +17,7 @@ limitations under the License.
 package v1alpha3
 
 import (
+	apiextensionv1 "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -46,9 +47,13 @@ const (
 type PipelineSpec struct {
 	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
 	// Important: Run "make" to regenerate code after modifying this file
-	Type                string               `json:"type" description:"type of devops pipeline, in scm or no scm"`
-	Pipeline            *NoScmPipeline       `json:"pipeline,omitempty" description:"no scm pipeline structs"`
+	Type string `json:"type" description:"type of devops pipeline, in scm or no scm"`
+	//+optional
+	Pipeline *NoScmPipeline `json:"pipeline,omitempty" description:"no scm pipeline structs"`
+	//+optional
 	MultiBranchPipeline *MultiBranchPipeline `json:"multi_branch_pipeline,omitempty" description:"in scm pipeline structs"`
+	//+optional
+	Template *PipelineTemplate `json:"template,omitempty"`
 }
 
 // PipelineStatus defines the observed state of Pipeline
@@ -103,6 +108,32 @@ const (
 	SourceTypeGithub    = "github"
 	SourceTypeBitbucket = "bitbucket_server"
 )
+
+type PipelineTemplate struct {
+	Ref TemplateRef `json:"ref"`
+	//+optional
+	Parameters []TemplateParameter `json:"parameters,omitempty"`
+}
+
+type TemplateRef struct {
+	// Name of the template referent.
+	Name string `json:"name"`
+
+	// Kind of the template referent. Default is Template
+	//+optional
+	Kind string `json:"kind,omitempty"`
+}
+
+type TemplateParameter struct {
+	// Name of template parameter.
+	Name string `json:"name"`
+	// Value of template parameter.
+	// +optional
+	Value apiextensionv1.JSON `json:"value,omitempty"`
+	// Promotable indicates that if the console promote current parameter.
+	// +optional
+	Promotable bool `json:"promotable,omitempty"`
+}
 
 type NoScmPipeline struct {
 	Name              string                `json:"name" description:"name of pipeline"`

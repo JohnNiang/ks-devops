@@ -394,6 +394,40 @@ spec:
                     required:
                     - name
                     type: object
+                  template:
+                    properties:
+                      parameters:
+                        items:
+                          properties:
+                            name:
+                              description: Name of template parameter.
+                              type: string
+                            promotable:
+                              description: Promotable indicates that if the console
+                                promote current parameter.
+                              type: boolean
+                            value:
+                              description: Value of template parameter.
+                              x-kubernetes-preserve-unknown-fields: true
+                          required:
+                          - name
+                          type: object
+                        type: array
+                      ref:
+                        properties:
+                          kind:
+                            description: Kind of the template referent. Default is
+                              Template
+                            type: string
+                          name:
+                            description: Name of the template referent.
+                            type: string
+                        required:
+                        - name
+                        type: object
+                    required:
+                    - ref
+                    type: object
                   type:
                     description: 'INSERT ADDITIONAL SPEC FIELDS - desired state of
                       cluster Important: Run "make" to regenerate code after modifying
