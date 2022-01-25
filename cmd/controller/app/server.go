@@ -53,14 +53,11 @@ func NewControllerManagerCommand() *cobra.Command {
 			KubernetesOptions: conf.KubernetesOptions,
 			JenkinsOptions:    conf.JenkinsOptions,
 			S3Options:         conf.S3Options,
-			JWTOptions: &options.JWTOptions{
-				Secret:           conf.AuthenticationOptions.JwtSecret,
-				MaximumClockSkew: conf.AuthenticationOptions.MaximumClockSkew,
-			},
-			FeatureOptions: s.FeatureOptions,
-			LeaderElection: s.LeaderElection,
-			LeaderElect:    s.LeaderElect,
-			WebhookCertDir: s.WebhookCertDir,
+			JWTOptions:        options.NewJWTOptions(conf.AuthenticationOptions),
+			FeatureOptions:    s.FeatureOptions,
+			LeaderElection:    s.LeaderElection,
+			LeaderElect:       s.LeaderElect,
+			WebhookCertDir:    s.WebhookCertDir,
 		}
 	} else {
 		klog.Fatal("Failed to load configuration from disk", err)

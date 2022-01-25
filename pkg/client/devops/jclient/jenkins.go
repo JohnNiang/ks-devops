@@ -33,8 +33,8 @@ func NewJenkinsClient(options *jenkins.Options) (jenkinsClient *JenkinsClient, e
 		UserName: options.Username,
 		Token:    options.Password,
 	}
-	crumbIssuer, e := jenkinsCore.GetCrumb()
-	if e != nil {
+	crumbIssuer, err := jenkinsCore.GetCrumb()
+	if err != nil {
 		return
 	} else if crumbIssuer != nil {
 		jenkinsCore.JenkinsCrumb = *crumbIssuer
