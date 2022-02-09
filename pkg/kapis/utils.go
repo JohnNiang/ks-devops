@@ -14,9 +14,10 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package api
+package kapis
 
 import (
+	"io"
 	"net/http"
 	"runtime"
 	"strings"
@@ -69,6 +70,15 @@ func HandleError(request *restful.Request, response *restful.Response, err error
 		statusCode = http.StatusInternalServerError
 	}
 	handle(statusCode, request, response, err)
+}
+
+// IgnoreEOF returns nil on io.EOF error.
+// All other values that are not io.EOF errors or nil are returned unmodified.
+func IgnoreEOF(err error) error {
+	if err == io.EOF {
+		return nil
+	}
+	return err
 }
 
 func handle(statusCode int, req *restful.Request, response *restful.Response, err error) {
