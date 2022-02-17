@@ -24,7 +24,7 @@ import (
 	controllerApp "kubesphere.io/devops/cmd/controller/app"
 	controllerOpt "kubesphere.io/devops/cmd/controller/app/options"
 	"kubesphere.io/devops/pkg/config"
-	"sigs.k8s.io/controller-runtime/pkg/runtime/signals"
+	"sigs.k8s.io/controller-runtime/pkg/manager/signals"
 
 	utilerrors "k8s.io/apimachinery/pkg/util/errors"
 )

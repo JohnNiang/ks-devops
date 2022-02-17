@@ -18,6 +18,7 @@ package app
 
 import (
 	"fmt"
+	"sigs.k8s.io/controller-runtime/pkg/manager/signals"
 
 	"github.com/spf13/cobra"
 	utilerrors "k8s.io/apimachinery/pkg/util/errors"
@@ -26,7 +27,6 @@ import (
 
 	"kubesphere.io/devops/cmd/apiserver/app/options"
 	"kubesphere.io/devops/pkg/config"
-	"sigs.k8s.io/controller-runtime/pkg/runtime/signals"
 )
 
 func NewAPIServerCommand() (cmd *cobra.Command) {

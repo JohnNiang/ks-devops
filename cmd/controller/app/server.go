@@ -30,7 +30,7 @@ import (
 	"kubesphere.io/devops/pkg/config"
 	"kubesphere.io/devops/pkg/indexers"
 	"kubesphere.io/devops/pkg/informers"
-	"sigs.k8s.io/controller-runtime/pkg/runtime/signals"
+	"sigs.k8s.io/controller-runtime/pkg/manager/signals"
 
 	"github.com/spf13/cobra"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
