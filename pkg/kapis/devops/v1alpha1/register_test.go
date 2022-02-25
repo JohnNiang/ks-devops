@@ -84,7 +84,7 @@ func TestAPIsExist(t *testing.T) {
 				request, _ := http.NewRequest(tt.args.method, uri, nil)
 				container.ServeHTTP(recorder, request)
 				if recorder.Code == 404 {
-					assert.NotEqual(t, "404 page not found\n", recorder.Body.String())
+					assert.NotEqual(t, "404: page not found\n", recorder.Body.String())
 				}
 			}
 		})

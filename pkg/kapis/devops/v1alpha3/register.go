@@ -20,10 +20,12 @@ package v1alpha3
 
 import (
 	"kubesphere.io/devops/pkg/client/git"
+	"kubesphere.io/devops/pkg/kapis/devops/v1alpha3/common"
 	"kubesphere.io/devops/pkg/kapis/devops/v1alpha3/scm"
+	"kubesphere.io/devops/pkg/kapis/devops/v1alpha3/template"
 	"net/http"
 
-	restful "github.com/emicklei/go-restful"
+	"github.com/emicklei/go-restful"
 	restfulspec "github.com/emicklei/go-restful-openapi"
 	v1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/runtime/schema"
@@ -46,21 +48,24 @@ var GroupVersion = schema.GroupVersion{Group: api.GroupName, Version: "v1alpha3"
 
 // AddToContainer adds web service into container.
 func AddToContainer(container *restful.Container, devopsClient devopsClient.Interface,
-	k8sClient k8s.Client, client client.Client) (wss []*restful.WebService) {
-	ws := runtime.NewWebService(GroupVersion)
-	wss = append(wss, ws)
-	registerRoutes(devopsClient, k8sClient, client, ws)
-	pipelinerun.RegisterRoutes(ws, client)
-	pipeline.RegisterRoutes(ws, client)
-	container.Add(ws)
+	k8sClient k8s.Client, client client.Client) []*restful.WebService {
 
-	ws = runtime.NewWebServiceWithoutGroup(GroupVersion)
-	wss = append(wss, ws)
-	registerRoutes(devopsClient, k8sClient, client, ws)
-	pipelinerun.RegisterRoutes(ws, client)
-	pipeline.RegisterRoutes(ws, client)
-	container.Add(ws)
-	return
+	options := &common.Options{
+		GenericClient: client,
+	}
+
+	services := []*restful.WebService{
+		runtime.NewWebService(v1alpha3.GroupVersion),
+		runtime.NewWebServiceWithoutGroup(v1alpha3.GroupVersion),
+	}
+	for _, service := range services {
+		template.RegisterRoutes(service, options)
+		registerRoutes(devopsClient, k8sClient, client, service)
+		pipelinerun.RegisterRoutes(service, client)
+		pipeline.RegisterRoutes(service, client)
+		container.Add(service)
+	}
+	return services
 }
 
 func registerRoutes(devopsClient devopsClient.Interface, k8sClient k8s.Client, client client.Client, ws *restful.WebService) {

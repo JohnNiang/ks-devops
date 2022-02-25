@@ -37,7 +37,7 @@ func (h *handler) handleQuery(request *restful.Request, response *restful.Respon
 
 func (h *handler) queryTemplate(devopsName string, commonQuery *query.Query) (*api.ListResult, error) {
 	templateList := &v1alpha1.TemplateList{}
-	if err := h.genericClient.List(context.Background(),
+	if err := h.List(context.Background(),
 		templateList,
 		client.InNamespace(devopsName),
 		client.MatchingLabelsSelector{
@@ -57,7 +57,7 @@ func (h *handler) handleGetTemplate(request *restful.Request, response *restful.
 
 func (h *handler) getTemplate(devopsName, templateName string) (*v1alpha1.Template, error) {
 	template := &v1alpha1.Template{}
-	if err := h.genericClient.Get(context.Background(), client.ObjectKey{Namespace: devopsName, Name: templateName}, template); err != nil {
+	if err := h.Get(context.Background(), client.ObjectKey{Namespace: devopsName, Name: templateName}, template); err != nil {
 		return nil, err
 	}
 	return template, nil
