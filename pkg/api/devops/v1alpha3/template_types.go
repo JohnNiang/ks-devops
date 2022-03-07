@@ -61,6 +61,11 @@ type TemplateParameter struct {
 	Validation *ParameterValidation `json:"validation,omitempty"`
 }
 
+// Required indicates if this parameter is required to provide to render template.
+func (param *TemplateParameter) Required() bool {
+	return param.Default.Size() == 0
+}
+
 // ParameterValidation is definition of how can we validate our parameter.
 type ParameterValidation struct {
 	// Expression is the expression of the validation.
